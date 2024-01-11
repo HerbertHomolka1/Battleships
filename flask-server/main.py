@@ -6,7 +6,7 @@ from exts import db
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from auth import auth_api
-from games import games_api
+from games import game_api
 from config import DevConfig
 
 
@@ -23,7 +23,7 @@ def create_app(config):
     api = Api(app, doc='/docs')
 
     api.add_namespace(auth_api)
-    api.add_namespace(games_api)
+    api.add_namespace(game_api)
 
 
     @app.shell_context_processor

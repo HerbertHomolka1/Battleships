@@ -1,17 +1,17 @@
 import requests as r
 
-def signup_request():
+def signup_request(username):
     
-    payload = {'username':'kyutestpotato','password':'potatoesaremostpowerful'}
+    payload = {'username':username,'password':'1'}
 
-    post_response = r.post('http://127.0.0.1:5000/auth/signup', json={'username':'kyutest','password':'potatoesaremostpowerful'})
+    post_response = r.post('http://127.0.0.1:5000/auth/signup', json = payload)
 
 
-    return post_response
+    return post_response, post_response.json()
 
-def login_request():
+def login_request(username):
 
-    payload = {'username':'kyutestpotato','password':'potatoesaremostpowerful'}
+    payload = {'username':username,'password':'1'}
 
     post_response = r.post('http://127.0.0.1:5000/auth/login', json=payload)
 
@@ -44,7 +44,7 @@ def games_post_request(access_token):
     print(response.json())  # Assuming the response is in JSON format
 
 def games_get_request(access_token):
-    url = 'http://127.0.0.1:5000/games/games'
+    url = 'http://127.0.0.1:5000/Games/games'
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json',
@@ -53,11 +53,11 @@ def games_get_request(access_token):
     response = r.get(url, headers=headers)
 
     print("Response Status Code:", response.status_code)
-    # print("Response Content:", response.json())
+    print("Response Content:", response.json())
     return response
 
-signup_request()
-token = login_request()
-response = games_get_request(token)
 
-
+username='uga2020111o'
+signup_request(username)
+token=login_request(username)
+games_get_request(token)

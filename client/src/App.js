@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useState } from "react";
+import "./App.css";
+import BoardCreation from './pages/BoardCreation'
+import login from "./fetch/login";
+import signUp from "./fetch/signUp";
 
-function App() {
+const App = () => {
+  const [username,setUsername] = useState('')
+  const [password,setPassword] = useState('')
+  const [messageLogin, setMessageLogin] = useState('')
+  const [messageSignUp, setMessageSignUp] = useState('')
+
+  const handleLogin = (event) => {
+
+    login(username,password).then(
+      (message) => setMessageLogin(message)
+    )
+    
+  };
+
+  const handleSignup = (event) => {
+   
+    signUp(username,password).then(
+      (message) => setMessageSignUp(message)
+    )
+
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  
+      <Router>
+        <div>
+        <p>{messageLogin}</p>
+        <p>{messageSignUp}</p>
+        <input type="text" placeholder="Username" name="username" onChange={(event) => setUsername(event.target.value)}/>
+        <input type="password" placeholder="Password" name="password" onChange={(event) => setPassword(event.target.value)}/>
+        <button onClick={handleLogin}>Login</button>
+        <button onClick={handleSignup}>Signup</button>
+      </div>
+        <Routes>
+          <Route path="/" element={<BoardCreation />} />
+        </Routes>
+      </Router>
+
   );
-}
+};
 
 export default App;
+ 
