@@ -8,12 +8,12 @@ from flask_jwt_extended import JWTManager
 from auth import auth_api
 from games import game_api
 from config import DevConfig
-
+from flask_socketio import SocketIO
 
 def create_app(config):
     app = Flask(__name__)
     app.config.from_object(DevConfig)
-
+    # socketio = SocketIO(auth_api)
     CORS(app)
     
     db.init_app(app)
@@ -39,4 +39,5 @@ def create_app(config):
 app = create_app(DevConfig)
 
 if __name__ == "__main__":
+
     app.run()

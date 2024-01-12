@@ -45,7 +45,7 @@ class GamesResource(Resource):
         
         game = Game(winner=data.get('winner'),
                     user_username=data.get('username'), 
-                    moves=data.get('moves'))
+                    ships=data.get('ships'))
 
         game.save()
         return game, 201 # created

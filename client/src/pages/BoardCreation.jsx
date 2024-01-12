@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 // import { useForm } from "react-hook-form"
 import Board from "../components/Board";
 import shipClasses from "../ships/shipTypes";
+// import submitBoard from "../fetch/submitBoard";
+import { Link } from "react-router-dom";
 
 function BoardCreation() {
   const initialShips = { destroyer: 2, boat: 4, battleship: 1 };
@@ -200,7 +202,10 @@ function BoardCreation() {
       )}
 
       {shipToAssign === "none" ? (
-        <button> Start the Game </button>
+        <Link to="/BoardCreation">
+          <button onClick={console.log('submitBoard function is being worked on')}> Start the Game </button>
+        </Link>
+       
       ) : (
         <div>
           <div>
