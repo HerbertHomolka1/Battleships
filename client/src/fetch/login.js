@@ -1,6 +1,9 @@
+import Cookies from "js-cookie";
+import { useState } from "react";
+
 function login(username, password) {
 
-    let URL = "http://127.0.0.1:5000/login";
+    let URL = "http://127.0.0.1:5000/auth/login";
     const payload = { username: username, password: password };
     const accessToken = fetch(URL, {
       method: "Post",
@@ -19,11 +22,15 @@ function login(username, password) {
       .then((resJson) => {
         const accessToken = resJson.access_token;
         const refreshToken = resJson.refreshToken;
+
+        Cookies.set("accessToken", accessToken);
+       
+
         return accessToken;
       })
       .catch((err) => console.log(err));
-  
-      return accessToken;
+
+    return accessToken
   }
   
   

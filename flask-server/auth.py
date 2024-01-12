@@ -51,7 +51,7 @@ class Login(Resource):
     @auth_api.expect(auth_model)
     def post(self):
 
-        data = request.get.json()
+        data = request.get_json()
 
         username = data.get('username')
         password = data.get('password')

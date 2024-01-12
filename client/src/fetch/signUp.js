@@ -1,5 +1,5 @@
 function signUp(username, password) {
-  let URL = "http://127.0.0.1:5000/signup";
+  let URL = "http://127.0.0.1:5000/auth/signup";
   const payload = { username: username, password: password };
   const message = fetch(URL, {
     method: "Post",

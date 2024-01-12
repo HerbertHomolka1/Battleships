@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Board from '../components/Board'
 import shipClasses from "../ships/shipTypes";
 
-function App() {
+function BoardCreation() {
   const initialShips = { destroyer: 2, boat: 4, battleship: 1 };
   const [shipToAssign, setShipToAssign] = useState("destroyer");
   const [shipCoords, setShipCoords] = useState([]);
@@ -221,4 +221,4 @@ function App() {
   );
 }
 
-export default App;
+export default BoardCreation;
