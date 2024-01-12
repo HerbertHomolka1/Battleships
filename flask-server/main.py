@@ -8,7 +8,7 @@ from flask_jwt_extended import JWTManager
 from auth import auth_api
 from games import game_api
 from config import DevConfig
-from flask_socketio import SocketIO
+# from flask_socketio import SocketIO
 
 def create_app(config):
     app = Flask(__name__)

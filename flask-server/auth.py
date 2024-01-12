@@ -15,11 +15,11 @@ from flask_jwt_extended import (
 )
 from flask import Flask, request, jsonify, make_response
 from flask_cors import cross_origin
-
+# from flask_socketio import SocketIO 
 
 
 auth_api = Namespace('auth', description='Resource handling related to authentication.')
-
+# socketio = SocketIO()
 
 auth_model = auth_api.model(
     'auth', {
