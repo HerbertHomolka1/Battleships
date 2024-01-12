@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 // import { useForm } from "react-hook-form"
-import Board from '../components/Board'
+import Board from "../components/Board";
 import shipClasses from "../ships/shipTypes";
 
 function BoardCreation() {
@@ -67,12 +67,14 @@ function BoardCreation() {
     const alreadyClicked = shipCoords.some(
       (coord) => coord.x === x && coord.y === y
     );
-    // isAdjacent -> is within the specified dimmensions (like 4x1 or 2x3)
+    // The user can only click adjacent squares
     const isAdjacent =
       shipCoords.length === 0 ||
       shipCoords.some(
         (coord) => Math.abs(coord.x - x) + Math.abs(coord.y - y) < 2
       );
+      // The user can only click squares that could form a ship. 
+      // If a ship is 4x2 user cannot click 5 squares in a line.
     const correctDimmensions = (shipCoords, size, x, y) => {
       const sizeX =
         Math.max(...[...shipCoords.map((coord) => coord.x), x]) -
@@ -95,6 +97,7 @@ function BoardCreation() {
         return sizeY <= size[0] && sizeX <= size[1];
       }
     };
+    // There must be at least 1 square between any 2 ships.
     const notTouchingOtherShips =
       allShipCoords.length === 0 ||
       allShipCoords.every(
