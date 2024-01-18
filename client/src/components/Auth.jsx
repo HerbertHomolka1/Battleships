@@ -47,7 +47,7 @@ function Auth() {
     <div>
       {/* Display login, logout and signup messages */}
       <p>{message}</p>
-      <p>{loggedUsers.length} </p>
+      loggged users <ul> {loggedUsers.map((loggedUser)=>(<li>{loggedUser}</li>))} </ul>
 
       
 

@@ -38,24 +38,21 @@ class Users:
 
 users = Users()
 
+lobby = []
+
 
 # @socketio.on('connect', namespace='/auth')
 # def connect():
 #     # username = 'nnn'
 #     # users.add_logged(username)
 #     socketio.emit('update users', 'backend: all is good')
+
 @socketio.on('connect', namespace='/auth')
 def connect():
     print('got connect')
-    socketio.emit('update users', 'backend: sockets work')
+    socketio.emit('update users', lobby, namespace='/auth')
 
 
-
-# @socketio.on('disconnect', namespace='/auth')
-# def disconnect():
-#     username = 'nnn'
-#     users.remove_logged(username)
-#     socketio.emit('update users', 'you disconnected')
 
 # @socketio.on('login_request', namespace='/auth')
 # def handle_login_request(data):
@@ -99,13 +96,16 @@ class Login(Resource):
 
         if db_user is None or not check_password_hash(db_user.hashed_password,password): # no such username in db or passwords dont match
             return jsonify({'message':'incorrect username or password'})
-
         
+
         access_token = create_access_token(identity=db_user.username)
         refresh_token = create_refresh_token(identity=db_user.username)
 
 
-        
+        lobby.append(username)
+        # socketio.emit('update users', f'lobby: {lobby}', namespace='/auth')
+        connect()
+
         return jsonify({
             'access_token': access_token,
             'refresh_token': refresh_token
