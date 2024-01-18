@@ -52,31 +52,67 @@ lobby = []
 #     print('got connect')
 #     socketio.emit('update users', lobby, namespace='/auth')
 
+
 @socketio.on('connect', namespace='/auth')
+@jwt_required()
 def connect():
     print('got connect')
-    access_token = request.args.get('access_token')
-    print('we get this_access token: ', access_token)
     
-    if access_token:
-        try:
-            # Verify the access token and get the identity (username)
-            username = get_jwt_identity()
-            print('appending lobby...')
-            lobby.append(username)
-            print('lobby: ', lobby)
-        except Exception as e:
-            print(f"Error verifying access token: {e}")
+    username = get_jwt_identity()
+    if username not in [user['username'] for user in lobby]:
+        sid= request.sid
+        print(username)
+        print('appending lobby...')
+        lobby.append({'username': username, 'sid':sid, 'challengers': []})
+        print('lobby: ', lobby)
+    
 
-    socketio.emit('update users', lobby, namespace='/auth')
+    socketio.emit('update users', [user['username'] for user in lobby], namespace='/auth')
 
-# @socketio.on('login_request', namespace='/auth')
-# def handle_login_request(data):
-#     username = 'nnn'
-#     # Additional logic based on the username or access token
-#     # You can emit a response back to the client if needed
-#     emit('login_response', {'message': f'User {username} is authenticated'})
+@socketio.on('disconnect', namespace='/auth')
+def disconnect():
+    sid = request.sid
+    user_to_remove = None
+    for i,user in enumerate(lobby):
+        if user['sid'] == sid:
+            del lobby[i]
+            print(f'User disconnected: {user['username']}')
+            print('Updated lobby:', lobby)
+            socketio.emit('update users', [user['username'] for user in lobby], namespace='/auth')
+            break
 
+def new_duel():
+    pass
+
+@socketio.on('challenge',namespace='/auth')
+@jwt_required
+def send_challenge():
+    data = request.get_json()
+
+    username = get_jwt_identity()
+    opponent = data.get('opponent')
+
+    oponent_ready = False
+    search_successful = False
+    for user in lobby.items():
+        if name == opponent:
+            search_successful = True
+            user1_ready = True
+            user['challerngers'] += 'opponent'
+            
+    
+    if search_successful:
+        if oponent_ready:
+            new_duel() #create a new room for both. they shall duel
+        else:
+            payload = {'opponent': user['username'], 'status': 'waiting'}
+            socketio.emit('challenge', payload.jsonify() , room=username['sid']) 
+    else:
+        payload = {'opponent': opponent, 'status': 'rejected'}
+        socketio.emit('challenge', payload.jsonify(), room=request.sid) 
+        
+
+        
 
 @auth_api.route('/signup')
 class SignUp(Resource):
@@ -117,10 +153,7 @@ class Login(Resource):
         access_token = create_access_token(identity=db_user.username)
         refresh_token = create_refresh_token(identity=db_user.username)
 
-
-        # lobby.append(username)
-        # # socketio.emit('update users', f'lobby: {lobby}', namespace='/auth')
-        connect()
+        # connect() # here we connect again, now with the access token
 
         return jsonify({
             'access_token': access_token,

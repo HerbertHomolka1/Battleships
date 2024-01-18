@@ -8,26 +8,30 @@ function useLobby() {
   const { isLoggedIn } = useGlobalState();
 
   useEffect(() => {
-    const socket = io("http://127.0.0.1:5000/auth", {
-      query: { access_token: isLoggedIn ? accessToken : null },
-    });
+    if (isLoggedIn) {
+      const accessToken = Cookies.get("accessToken");
 
-    console.log("useLobby triggered 1/3");
-    const accessToken = Cookies.get('accessToken') 
-    console.log("accessToken: ", accessToken);
+      const socket = io("http://127.0.0.1:5000/auth", {
+        extraHeaders: { Authorization: `Bearer ${accessToken}`,},
+      });
+    
+      console.log("useLobby triggered 1/3");
 
-    socket.on("connect", () => {
-      console.log("Connect triggered 2/3");
-    });
+      console.log("accessToken: ", accessToken);
 
-    socket.on("update users", (data) => {
-      console.log(`Update users triggered 3/3 data is ${data}`);
-      setLoggedUsers([...data]);
-    });
+      socket.on("connect", () => {
+        console.log("Connect triggered 2/3");
+      });
 
-    return () => {
-      socket.disconnect();
-    };
+      socket.on("update users", (data) => {
+        console.log(`Update users triggered 3/3 data is ${data}`);
+        setLoggedUsers([...data]);
+      });
+
+      return () => {
+        socket.disconnect();
+      };
+    }
   }, [isLoggedIn]);
 
   return loggedUsers;

@@ -8,8 +8,8 @@ function Auth() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const {isLoggedIn,setIsLoggedIn} = useGlobalState() 
-  const loggedUsers = useLobby()
+  const { isLoggedIn, setIsLoggedIn } = useGlobalState();
+  const loggedUsers = useLobby();
   /**
    * @function handleLogin
    * @description Handles user login by calling the login API and updating state.
@@ -20,16 +20,13 @@ function Auth() {
   const handleLogin = (event) => {
     login(username, password).then((message) => {
       setMessage(message ? "Login successful" : "Wrong credentials");
-      setIsLoggedIn(message ? true : false)
-
+      setIsLoggedIn(message ? true : false);
     });
   };
 
   const handleLogout = (event) => {
-   
     setMessage("Successfully logged out");
-    setIsLoggedIn(false)
-  
+    setIsLoggedIn(false);
   };
 
   /**
@@ -47,9 +44,12 @@ function Auth() {
     <div>
       {/* Display login, logout and signup messages */}
       <p>{message}</p>
-      loggged users <ul> {loggedUsers.map((loggedUser)=>(<li>{loggedUser}</li>))} </ul>
-
-      
+      <div>
+        loggged users{" "}
+        {loggedUsers.map((loggedUser) => (
+          <button key={loggedUser} onClick={console.log("uga")}>{loggedUser}</button>
+        ))}{" "}
+      </div>
 
       {isLoggedIn ? (
         <div>
@@ -79,6 +79,5 @@ function Auth() {
     </div>
   );
 }
-
 
 export default Auth;
