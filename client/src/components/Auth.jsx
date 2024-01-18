@@ -26,10 +26,10 @@ function Auth() {
   };
 
   const handleLogout = (event) => {
-    login(username, password).then((message) => {
-      setMessage("Successfully logged out");
-      setIsLoggedIn(false)
-    });
+   
+    setMessage("Successfully logged out");
+    setIsLoggedIn(false)
+  
   };
 
   /**

@@ -28,15 +28,15 @@ auth_model = auth_api.model(
     }
 )
 
-class Users:
-    def __init__(self):
-        self.logged = set()
-    def add_logged(username):
-        self.logged.add(username)
-    def remove_logged(username):
-        self.logged.remove(username)
+# class Users:
+#     def __init__(self):
+#         self.logged = set()
+#     def add_logged(username):
+#         self.logged.add(username)
+#     def remove_logged(username):
+#         self.logged.remove(username)
 
-users = Users()
+# users = Users()
 
 lobby = []
 
@@ -47,12 +47,28 @@ lobby = []
 #     # users.add_logged(username)
 #     socketio.emit('update users', 'backend: all is good')
 
+# @socketio.on('connect', namespace='/auth')
+# def connect():
+#     print('got connect')
+#     socketio.emit('update users', lobby, namespace='/auth')
+
 @socketio.on('connect', namespace='/auth')
 def connect():
     print('got connect')
+    access_token = request.args.get('access_token')
+    print('we get this_access token: ', access_token)
+    
+    if access_token:
+        try:
+            # Verify the access token and get the identity (username)
+            username = get_jwt_identity()
+            print('appending lobby...')
+            lobby.append(username)
+            print('lobby: ', lobby)
+        except Exception as e:
+            print(f"Error verifying access token: {e}")
+
     socketio.emit('update users', lobby, namespace='/auth')
-
-
 
 # @socketio.on('login_request', namespace='/auth')
 # def handle_login_request(data):
@@ -102,8 +118,8 @@ class Login(Resource):
         refresh_token = create_refresh_token(identity=db_user.username)
 
 
-        lobby.append(username)
-        # socketio.emit('update users', f'lobby: {lobby}', namespace='/auth')
+        # lobby.append(username)
+        # # socketio.emit('update users', f'lobby: {lobby}', namespace='/auth')
         connect()
 
         return jsonify({
