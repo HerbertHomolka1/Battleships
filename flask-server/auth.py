@@ -15,11 +15,11 @@ from flask_jwt_extended import (
 )
 from flask import Flask, request, jsonify, make_response
 from flask_cors import cross_origin
-# from flask_socketio import SocketIO 
+from flask_socketio import SocketIO 
 
 
 auth_api = Namespace('auth', description='Resource handling related to authentication.')
-# socketio = SocketIO()
+socketio = SocketIO()
 
 auth_model = auth_api.model(
     'auth', {
@@ -28,34 +28,38 @@ auth_model = auth_api.model(
     }
 )
 
-# class Users:
-#     def __init__(self):
-#         self.logged = set()
-#     def add_logged(username):
-#         self.logged.add(username)
-#     def remove_logged(username):
-#         self.logged.remove(username)
+class Users:
+    def __init__(self):
+        self.logged = set()
+    def add_logged(username):
+        self.logged.add(username)
+    def remove_logged(username):
+        self.logged.remove(username)
 
-# users = Users()
+users = Users()
 
-# @jwt_required
-# @socketio.on('connect')
+
+# @socketio.on('connect', namespace='/auth')
 # def connect():
-#     username = get_jwt_identity()
-#     users.add_logged(username)
-#     socketio.emit('update users', list(users.logged))
+#     # username = 'nnn'
+#     # users.add_logged(username)
+#     socketio.emit('update users', 'backend: all is good')
+@socketio.on('connect', namespace='/auth')
+def connect():
+    print('got connect')
+    socketio.emit('update users', 'backend: sockets work')
 
 
-# @socketio.on('disconnect')
+
+# @socketio.on('disconnect', namespace='/auth')
 # def disconnect():
-#     username = request.sid.split("#")[1]
+#     username = 'nnn'
 #     users.remove_logged(username)
-#     socketio.emit('update users', list(users.logged))
+#     socketio.emit('update users', 'you disconnected')
 
-# @socketio.on('login_request')
-# @jwt_required()
+# @socketio.on('login_request', namespace='/auth')
 # def handle_login_request(data):
-#     username = get_jwt_identity()
+#     username = 'nnn'
 #     # Additional logic based on the username or access token
 #     # You can emit a response back to the client if needed
 #     emit('login_response', {'message': f'User {username} is authenticated'})

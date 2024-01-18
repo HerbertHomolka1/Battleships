@@ -2,14 +2,14 @@ import { useState } from "react";
 import login from "../fetch/login";
 import signUp from "../fetch/signUp";
 import { useGlobalState } from "../context/GlobalStateContext";
-// import useLobby from "../fetch/useLobby";
+import useLobby from "../fetch/useLobby";
 
 function Auth() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const {isLoggedIn,setIsLoggedIn} = useGlobalState() 
-  // const loggedUsers = useLobby()
+  const loggedUsers = useLobby()
   /**
    * @function handleLogin
    * @description Handles user login by calling the login API and updating state.
@@ -47,11 +47,9 @@ function Auth() {
     <div>
       {/* Display login, logout and signup messages */}
       <p>{message}</p>
-      {/* <ul>
+      <p>{loggedUsers.length} </p>
 
-       {loggedUsers.map( (user) => <li>user</li>)} 
-        
-      </ul> */}
+      
 
       {isLoggedIn ? (
         <div>
