@@ -1,12 +1,12 @@
 from exts import db
 
-#each user can have many games
+#each user can have many maps
 class User(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     username = db.Column(db.String, nullable=False) 
     hashed_password = db.Column(db.Text,nullable=False)
 
-    games = db.relationship('Game', backref='user',lazy = True)
+    maps = db.relationship('Map', backref='user',lazy = True)
 
     def __repr__(self):
         return f'<User {self.username}>'    
@@ -20,7 +20,7 @@ class User(db.Model):
         db.session.commit()
 
 
-#theres a list of games here. each leads to a game db
+#theres a list of maps here. each leads to a map db
 class Map(db.Model):
     id = db.Column(db.Integer,primary_key=True)
 
@@ -29,7 +29,7 @@ class Map(db.Model):
     map = db.Column(db.Text)
 
     def __repr__(self):
-        return f'Games of Player <{self.player_username}>'    
+        return f'Maps of Player <{self.player_username}>'    
 
 
     def save(self):

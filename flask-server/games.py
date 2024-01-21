@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from config import DevConfig
-from models import User, Game
+from models import User, Map
 from exts import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import (
@@ -24,7 +24,7 @@ map_model = game_api.model(
     }
 )
 
-@game_api.route('/games')
+@game_api.route('/maps')
 class GamesResource(Resource):
     @jwt_required()
     @game_api.marshal_list_with(map_model)
@@ -32,9 +32,9 @@ class GamesResource(Resource):
 
         username = get_jwt_identity()
 
-        games = Game.query.filter_by(user_username=username).all()
+        maps = Map.query.filter_by(user_username=username).all()
 
-        return games
+        return maps
 
     @game_api.marshal_with(map_model)
     @game_api.expect(map_model)
@@ -48,4 +48,4 @@ class GamesResource(Resource):
                     )
 
         map.save()
-        return game, 201 # created
+        return map, 201 # created

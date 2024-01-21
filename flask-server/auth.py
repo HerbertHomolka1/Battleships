@@ -83,14 +83,14 @@ def send_challenge(data):
 
     oponent_ready = False
     search_successful = False
-    for user in lobby:
-        if user['username'] == opponent:
+    for opp in lobby:
+        if opp['username'] == opponent:
             search_successful = True
-            if opponent not in user['challengers']:
-                user['challengers'].append(opponent)
+            if username not in opp['challengers']:
+                opp['challengers'].append(username)
             print(f'server: {username} sends to {opponent}')
-            payload = {'opponent': user['username'], 'status': 'waiting'}
-            socketio.emit('challenge response', payload , room=user['sid'], namespace='/auth') 
+            payload = opp['challengers']
+            socketio.emit('challenge response', payload , room=opp['sid'], namespace='/auth') 
             
             
     
