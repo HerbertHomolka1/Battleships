@@ -3,7 +3,7 @@ from flask import Flask, request
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from config import DevConfig
-from models import User, Game
+from models import User, Map
 from exts import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import (
@@ -41,18 +41,6 @@ auth_model = auth_api.model(
 lobby = []
 
 
-# @socketio.on('connect', namespace='/auth')
-# def connect():
-#     # username = 'nnn'
-#     # users.add_logged(username)
-#     socketio.emit('update users', 'backend: all is good')
-
-# @socketio.on('connect', namespace='/auth')
-# def connect():
-#     print('got connect')
-#     socketio.emit('update users', lobby, namespace='/auth')
-
-
 @socketio.on('connect', namespace='/auth')
 @jwt_required()
 def connect():
@@ -84,32 +72,38 @@ def disconnect():
 def new_duel():
     pass
 
-@socketio.on('challenge',namespace='/auth')
-@jwt_required
-def send_challenge():
-    data = request.get_json()
+@socketio.on('challenge', namespace='/auth')
+@jwt_required()
+def send_challenge(data):
 
     username = get_jwt_identity()
     opponent = data.get('opponent')
+    print(f'{username} got challenge from {opponent}')
+  
 
     oponent_ready = False
     search_successful = False
-    for user in lobby.items():
-        if name == opponent:
+    for user in lobby:
+        if user['username'] == opponent:
             search_successful = True
-            user1_ready = True
-            user['challerngers'] += 'opponent'
+            if opponent not in user['challengers']:
+                user['challengers'].append(opponent)
+            print(f'server: {username} sends to {opponent}')
+            payload = {'opponent': user['username'], 'status': 'waiting'}
+            socketio.emit('challenge response', payload , room=user['sid'], namespace='/auth') 
+            
             
     
-    if search_successful:
-        if oponent_ready:
-            new_duel() #create a new room for both. they shall duel
-        else:
-            payload = {'opponent': user['username'], 'status': 'waiting'}
-            socketio.emit('challenge', payload.jsonify() , room=username['sid']) 
-    else:
-        payload = {'opponent': opponent, 'status': 'rejected'}
-        socketio.emit('challenge', payload.jsonify(), room=request.sid) 
+    # if search_successful:
+    #     if oponent_ready:
+    #         new_duel() #create a new room for both. they shall duel
+    #     else:
+    #         payload = {'opponent': user['username'], 'status': 'waiting'}
+    #         socketio.emit('challenge', payload.jsonify() , room=username['sid']) 
+    #         print(f'got challenge from {username}')
+    # else:
+    #     payload = {'opponent': opponent, 'status': 'rejected'}
+    #     socketio.emit('challenge', payload.jsonify(), room=request.sid) 
         
 
         

@@ -6,7 +6,7 @@ from auth import auth_api
 from games import game_api
 from config import DevConfig
 from auth import socketio as auth_socketio
-from models import User, Game
+from models import User, Map
 from exts import db
 
 def create_app(config):

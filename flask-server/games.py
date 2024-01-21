@@ -16,7 +16,7 @@ from flask_jwt_extended import (
 
 game_api = Namespace('Games','Everything related with games.')
 
-game_model = game_api.model(
+map_model = game_api.model(
     'SignUp', {
         'winner' : fields.String(),
         'player_username': fields.String(),
@@ -27,7 +27,7 @@ game_model = game_api.model(
 @game_api.route('/games')
 class GamesResource(Resource):
     @jwt_required()
-    @game_api.marshal_list_with(game_model)
+    @game_api.marshal_list_with(map_model)
     def get(self):
 
         username = get_jwt_identity()
@@ -36,16 +36,16 @@ class GamesResource(Resource):
 
         return games
 
-    @game_api.marshal_with(game_model)
-    @game_api.expect(game_model)
+    @game_api.marshal_with(map_model)
+    @game_api.expect(map_model)
     @jwt_required()
     def post(self):
         
         data = request.json()
         
-        game = Game(winner=data.get('winner'),
+        map = Map(map=data.get('map'),
                     user_username=data.get('username'), 
-                    ships=data.get('ships'))
+                    )
 
-        game.save()
+        map.save()
         return game, 201 # created

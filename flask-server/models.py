@@ -21,13 +21,12 @@ class User(db.Model):
 
 
 #theres a list of games here. each leads to a game db
-class Game(db.Model):
+class Map(db.Model):
     id = db.Column(db.Integer,primary_key=True)
-    winner = db.Column(db.String(10),nullable=False)
-    
+
     player_username = db.Column(db.String,db.ForeignKey('user.username'),nullable=False)
 
-    moves = db.Column(db.Text)
+    map = db.Column(db.Text)
 
     def __repr__(self):
         return f'Games of Player <{self.player_username}>'    
